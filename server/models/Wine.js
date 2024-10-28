@@ -1,13 +1,15 @@
+// server/models/Wine.js
 const mongoose = require('mongoose');
 
-const WineSchema = new mongoose.Schema({
-    name: { type: String, required: true }, // Название вина, обязательное поле
-    year: Number, // Год выпуска вина
-    country: String, // Страна происхождения
-    region: String, // Регион
-    grape: String, // Сорт винограда
-    rating: Number, // Рейтинг вина
-    description: String 
-})
+const wineSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  year: Number,
+  country: String,
+  region: String,
+  grape: String,
+  rating: Number,
+  description: String,
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true } // Привязка к пользователю
+});
 
-module.exports = mongoose.model('Wine', WineSchema);
+module.exports = mongoose.model('Wine', wineSchema);
