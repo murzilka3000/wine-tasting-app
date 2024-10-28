@@ -8,6 +8,7 @@ const wineSchema = new mongoose.Schema({
   region: String,
   grape: String,
   rating: Number,
+  imageUrl: String,
   description: String,
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true } // Привязка к пользователю
 });

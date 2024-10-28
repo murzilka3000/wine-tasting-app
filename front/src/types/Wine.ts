@@ -8,4 +8,5 @@ export interface Wine {
     grape: string;
     rating: number;
     description: string;
+    imageUrl?: string; 
   }

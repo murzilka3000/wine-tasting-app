@@ -1,9 +1,8 @@
-// frontend/src/components/AddWineForm.tsx
 import React, { useState } from 'react';
 import { addWine } from '../services/wineService';
 import { Wine } from '../types/Wine';
 
-type NewWine = Omit<Wine, '_id'>; // Тип для нового вина без `_id`
+type NewWine = Omit<Wine, '_id' | 'imageUrl'>; // Тип для нового вина без `_id` и `imageUrl`
 
 const AddWineForm: React.FC = () => {
   const [formData, setFormData] = useState<NewWine>({
@@ -16,6 +15,8 @@ const AddWineForm: React.FC = () => {
     description: ''
   });
 
+  const [imageFile, setImageFile] = useState<File | null>(null); // Состояние для файла изображения
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -24,11 +25,24 @@ const AddWineForm: React.FC = () => {
     }));
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setImageFile(file);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await addWine(formData);
+      const data = new FormData();
+      Object.entries(formData).forEach(([key, value]) => data.append(key, String(value)));
+
+      if (imageFile) {
+        data.append('image', imageFile); // Добавляем файл изображения в FormData
+      }
+
+      await addWine(data);
       alert('Вино успешно добавлено!');
+
       setFormData({
         name: '',
         year: new Date().getFullYear(),
@@ -38,6 +52,7 @@ const AddWineForm: React.FC = () => {
         rating: 0,
         description: ''
       });
+      setImageFile(null);
     } catch (error) {
       console.error('Ошибка при добавлении вина:', error);
       alert('Произошла ошибка при добавлении вина.');
@@ -74,6 +89,10 @@ const AddWineForm: React.FC = () => {
       <label>
         Описание:
         <textarea name="description" value={formData.description} onChange={handleChange} required />
+      </label>
+      <label>
+        Изображение:
+        <input type="file" name="image" onChange={handleFileChange} />
       </label>
       <button type="submit">Добавить вино</button>
     </form>

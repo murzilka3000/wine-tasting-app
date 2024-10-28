@@ -14,9 +14,14 @@ export const getWines = async (): Promise<Wine[]> => {
   return response.data;
 };
 
-// Добавить новое вино
-export const addWine = async (wine: Omit<Wine, '_id'>): Promise<Wine> => {
-  const response = await axios.post(API_URL, wine, getAuthHeaders());
+// Обновленный `addWine` для работы с FormData
+export const addWine = async (data: FormData): Promise<Wine> => {
+  const response = await axios.post(API_URL, data, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      ...getAuthHeaders().headers
+    }
+  });
   return response.data;
 };
 

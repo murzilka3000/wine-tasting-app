@@ -1,7 +1,20 @@
 const express = require('express');
 const Wine = require('../models/Wine');
 const authMiddleware = require('../middleware/auth');
+const multer = require('multer');
 const router = express.Router();
+
+// Настраиваем `multer` для сохранения файлов в папке `uploads`
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
+});
+
+const upload = multer({ storage });
 
 // Получить все вина текущего пользователя
 router.get('/', authMiddleware, async (req, res) => {
@@ -13,10 +26,13 @@ router.get('/', authMiddleware, async (req, res) => {
   }
 });
 
-// Добавить новое вино
-router.post('/', authMiddleware, async (req, res) => {
+// Добавить новое вино с изображением
+router.post('/', authMiddleware, upload.single('image'), async (req, res) => {
+  const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
+
   const wine = new Wine({
     ...req.body,
+    imageUrl, // Сохраняем путь к изображению
     user: req.user.userId
   });
   try {
@@ -60,5 +76,4 @@ router.delete('/:id', authMiddleware, async (req, res) => {
   }
 });
 
-// Экспортируем router для использования в index.js
 module.exports = router;

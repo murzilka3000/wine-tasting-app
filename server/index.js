@@ -9,6 +9,9 @@ const PORT = process.env.PORT || 5001;
 app.use(cors());
 app.use(express.json());
 
+// Раздача статических файлов из папки uploads
+app.use('/uploads', express.static('uploads'));
+
 // Подключение к MongoDB
 const mongoURI = 'mongodb://localhost:27017/wineDB';
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -22,9 +25,9 @@ app.get('/', (req, res) => {
 
 // Подключаем маршруты
 const winesRouter = require('./routes/wines');
-const authRouter = require('./routes/auth'); // Импортируем auth.js
+const authRouter = require('./routes/auth');
 app.use('/api/wines', winesRouter);
-app.use('/api/auth', authRouter); // Подключаем маршруты авторизации
+app.use('/api/auth', authRouter);
 
 // Запуск сервера
 app.listen(PORT, () => {
