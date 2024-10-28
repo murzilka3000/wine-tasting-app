@@ -1,0 +1,31 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "серверная часть для винного приложения",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "dev": "node index.js"
+  },
+  "keywords": [
+    "wine",
+    "tasting",
+    "virtual",
+    "sommelier",
+    "wine",
+    "recommendations",
+    "wine",
+    "reviews",
+    "React",
+    "Node.js",
+    "Express",
+    "MongoDB"
+  ],
+  "author": "murzilka300",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.1",
+    "mongoose": "^8.7.3"
+  }
+}
